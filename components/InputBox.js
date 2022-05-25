@@ -4,33 +4,26 @@ import {EmojiHappyIcon} from "@heroicons/react/outline"
 import {CameraIcon, VideoCameraIcon} from "@heroicons/react/solid"
 import {useRef} from "react"
 import { db } from "../firebase"
-import { collection, addDoc } from "firebase/firestore/lite"; 
-
+import firebase from "firebase"
 
 function InputBox() {
     const [session] = useSession()
-    const inputRef = useRef(null)
+    const inputRef = useRef(null)       
 
     function sendPost(e) {
         e.preventDefault()
 
         if(!inputRef.current.value) return
 
-        addDoc(collection(db, 'posts'), {
+        db.collection('posts').add({
             message: inputRef.current.value,
             name: session.user.name,
             email: session.user.email,
             image: session.user.image,
-            timestamp: app.firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-            alert('Message submitted 👍' );
-          })
-          .catch((error) => {
-            alert(error.message);
-          });
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })        
 
-        inputRef.current.value = ''
+        inputRef.current.value = ''        
     }
 
     function addImageToPost() {
@@ -38,8 +31,7 @@ function InputBox() {
     }
 
 
-    return (    
-
+    return (  
         <div className="bg-white p-2 rounded-2xl shadow-md text-gray-500 mt-6 font-medium">
             <div className="flex space-x-4 p-4 items-center">
                 <Image 
